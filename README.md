@@ -9,7 +9,7 @@ passwiz [-m method_name,--method method_name] [-s integer,--size integer]
 ```
 
 The currently supported methods are:
-- `urandom`: /dev/urandom on GNU/Linux
+- `urandom`: `/dev/urandom` on GNU/Linux
 - `gpg`: GnuPG
 
 The default size is 16 characters long.
