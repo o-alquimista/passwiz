@@ -3,7 +3,7 @@ A random password generator written in Bash
 
 PassWiz uses `/dev/urandom` as its default source of randomness.
 
-# Usage
+## Usage
 ```
 passwiz [-m method_name,--method method_name] [-s integer,--size integer]
 ```
@@ -14,10 +14,10 @@ The currently supported methods are:
 
 The default size is 16 characters long.
 
-# Method "urandom"
+## Method "urandom"
 Creates passwords containing uppercase and lowercase alphanumeric characters and punctuation.
 
-# License
+## License
 Copyright 2019 Douglas Silva (0x9fd287d56ec107ac)
 
 This program is free software: you can redistribute it and/or modify
