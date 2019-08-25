@@ -1,0 +1,76 @@
+#!/bin/bash
+
+#
+# PassWiz, a random password generator.
+#
+# Copyright 2019 Douglas Silva (0x9fd287d56ec107ac)
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+
+OPTS=`getopt -n 'passgen' -o m:s:hv --long method:,size:,help,version -- "$@"`
+
+# If "getopt" exits with an error, echo a message.
+if [ $? != 0 ] ; then echo "Failed parsing options. See --help." >&2 ; exit 1 ; fi
+
+# Set default settings.
+HELP=false
+VERSION=false
+SIZE=16
+METHOD=urandom
+
+# Retrieves the values passed with the options.
+while true; do
+  case "$1" in
+    # The "shift" command makes sure we only grab the value and not the
+    # option (e.g. "--help"). Options that take in some value must do a "shift 2".
+    -m | --method ) METHOD="$2"; shift 2 ;;
+    -s | --size ) SIZE="$2"; shift 2 ;;
+    -h | --help ) HELP=true; shift ;;
+    -v | --version ) VERSION=true; shift ;;
+    -- ) shift; break ;;
+    * ) break ;;
+  esac
+done
+
+about="PassWiz, version 0.1"
+usage="Usage: passwiz [-m method_name,--method method_name] [-s integer,--size integer]"
+methods_available="Methods: urandom (default), gpg"
+sizes="The default size is 16"
+
+if [ $HELP == true ]; then
+    echo $about >&2
+    echo $usage >&2
+    echo $methods_available >&2
+    echo $sizes >&2
+    exit
+fi
+
+if [ $VERSION == true ]; then
+    echo $about >&2
+    exit
+fi
+
+if [ $METHOD == "urandom" ]; then
+    printf "Your new password: \n\n"
+    strings /dev/urandom | tr -dc "[:alnum:][:punct:]" | head -c$SIZE; echo
+    exit
+elif [ $METHOD == "gpg" ]; then
+    printf "Your new password: \n\n"
+    gpg --gen-random --armor 2 $SIZE
+    exit
+else
+    echo "Error: Invalid method. See --help"
+    exit 1
+fi
