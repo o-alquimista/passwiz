@@ -45,21 +45,32 @@ while true; do
 done
 
 about="PassWiz, version 0.1"
-usage="Usage: passwiz [-m method_name,--method method_name] [-s integer,--size integer]"
-methods_available="Methods: urandom (default), gpg"
-sizes="The default size is 16"
+
+usage=$(cat << EOF
+Usage: passwiz [-m method_name,--method method_name] [-s length,--size length]
+
+Options:
+  -m, --method       specify a method for generating random characters
+  -s, --size         specify the size of the generated string (use integer)
+  -h, --help         print this help, then exit
+  -v, --version      print version number, then exit
+
+Methods:
+  - urandom (default)
+  - gpg
+
+The default size of the resulting string is $SIZE
+EOF
+)
 
 if [ $HELP == true ]; then
-    echo $about >&2
-    echo $usage >&2
-    echo $methods_available >&2
-    echo $sizes >&2
+    printf "%s\n" "$usage"
 
     exit
 fi
 
 if [ $VERSION == true ]; then
-    echo $about >&2
+    echo $about
 
     exit
 fi
