@@ -59,7 +59,7 @@ Options:
   -v, --version      print version number, then exit
 
 Methods:
-  - urandom (default)
+  - urandom (default; uses /dev/urandom)
   - gpg
 
 The default size of the resulting string is $SIZE
