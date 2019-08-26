@@ -19,10 +19,12 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+parseError="Failed parsing options. See --help."
+
 OPTS=`getopt -n 'passgen' -o m:s:hv --long method:,size:,help,version -- "$@"`
 
 # If "getopt" exits with an error, echo a message.
-if [ $? != 0 ] ; then echo "Failed parsing options. See --help." >&2 ; exit 1 ; fi
+if [[ $? != 0 ]] ; then echo $parseError >&2 ; exit 1 ; fi
 
 # Set default settings.
 HELP=false
@@ -31,7 +33,10 @@ SIZE=16
 METHOD=urandom
 
 # Retrieves the values passed with the options.
-while true; do
+# It uses the count of arguments that were passed as a progress
+# indicator, "shifting" back until the count reaches zero, which
+# causes the loop to end.
+while (( $# )); do
   case "$1" in
     -m | --method ) METHOD="$2"; shift 2 ;;
     -s | --size ) SIZE="$2"; shift 2 ;;
@@ -61,19 +66,34 @@ The default size of the resulting string is $SIZE
 EOF
 )
 
-if [ $HELP == true ]; then
+# --help and --version should not be requested at the same time.
+if [[ $HELP == true && $VERSION == true ]]; then
+    echo $parseError >&2
+
+    exit 1
+fi
+
+if [[ $HELP == true ]]; then
+    echo $about
     printf "%s\n" "$usage"
 
     exit
 fi
 
-if [ $VERSION == true ]; then
+if [[ $VERSION == true ]]; then
     echo $about
 
     exit
 fi
 
-if [ $METHOD == "urandom" ]; then
+# Detects if the requested size is an integer.
+if ! [[ $SIZE =~ ^[0-9]+$ ]]; then
+    echo $parseError >&2
+
+    exit 1
+fi
+
+if [[ $METHOD == "urandom" ]]; then
     printf "Your new password: \n\n"
 
     # "tr" will limit what characters can be used, and "head" will limit the size
@@ -81,14 +101,14 @@ if [ $METHOD == "urandom" ]; then
     strings /dev/urandom | tr -dc "[:alnum:][:punct:]" | head -c$SIZE; echo
 
     exit
-elif [ $METHOD == "gpg" ]; then
+elif [[ $METHOD == "gpg" ]]; then
     printf "Your new password: \n\n"
 
     gpg --gen-random --armor 2 $SIZE
 
     exit
 else
-    echo "Error: Invalid method. See --help"
+    echo $parseError >&2
 
     exit 1
 fi
