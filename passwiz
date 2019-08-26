@@ -33,8 +33,6 @@ METHOD=urandom
 # Retrieves the values passed with the options.
 while true; do
   case "$1" in
-    # The "shift" command makes sure we only grab the value and not the
-    # option (e.g. "--help"). Options that take in some value must do a "shift 2".
     -m | --method ) METHOD="$2"; shift 2 ;;
     -s | --size ) SIZE="$2"; shift 2 ;;
     -h | --help ) HELP=true; shift ;;
