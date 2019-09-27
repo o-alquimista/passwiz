@@ -3,15 +3,20 @@ A random password generator using /dev/urandom as its source.
 
 ## Usage
 ```
-Usage: passwiz [-h, --help] [-s length, --size length]
+Usage: passwiz [-h, --help] [-s SIZE, --size SIZE] [-c CONSTRAINT, --constraint CONSTRAINT]
 
 PassWiz, a random password generator.
 
 Options:
-  -s, --size         Specify the size (integer) of the generated string
+  -c, --constraint   Determine what type of characters can be used to make the password
+  -s, --size         Select the size of the generated string (default: 20)
   -h, --help         Print this help, then exit
 
-The default size of the resulting string is $DEFAULT_SIZE characters.
+Character type constraints (--constraint argument):
+  [1] Numeric
+  [2] Alphabetical
+  [3] Alphanumerical
+  [4] Alphanumerical and punctuation (default)
 ```
 
 ## License
