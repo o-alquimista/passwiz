@@ -21,16 +21,15 @@
 
 parseError="Failed parsing options. See --help."
 
-OPTS=`getopt -n 'passgen' -o m:s:hv --long method:,size:,help,version -- "$@"`
+OPTS=`getopt -n 'passwiz' -o s:h --long size:,help -- "$@"`
 
 # If "getopt" exits with an error, echo a message.
 if [[ $? != 0 ]] ; then echo $parseError >&2 ; exit 1 ; fi
 
 # Set default settings.
 HELP=false
-VERSION=false
+DEFAULT_SIZE=16
 SIZE=16
-METHOD=urandom
 
 # Retrieves the values passed with the options.
 # It uses the count of arguments that were passed as a progress
@@ -38,50 +37,28 @@ METHOD=urandom
 # causes the loop to end.
 while (( $# )); do
   case "$1" in
-    -m | --method ) METHOD="$2"; shift 2 ;;
     -s | --size ) SIZE="$2"; shift 2 ;;
     -h | --help ) HELP=true; shift ;;
-    -v | --version ) VERSION=true; shift ;;
     -- ) shift; break ;;
     * ) break ;;
   esac
 done
 
-about="PassWiz, version 0.1"
-
 usage=$(cat << EOF
-Usage: passwiz [-m method_name,--method method_name] [-s length,--size length]
+Usage: passwiz [-h, --help] [-s length, --size length]
+
+PassWiz, a random password generator.
 
 Options:
-  -m, --method       specify a method for generating random characters
-  -s, --size         specify the size of the generated string (use integer)
-  -h, --help         print this help, then exit
-  -v, --version      print version number, then exit
+  -s, --size         Specify the size (integer) of the generated string
+  -h, --help         Print this help, then exit
 
-Methods:
-  - urandom (default; uses /dev/urandom)
-  - gpg
-
-The default size of the resulting string is $SIZE
+The default size of the resulting string is $DEFAULT_SIZE characters.
 EOF
 )
 
-# --help and --version should not be requested at the same time.
-if [[ $HELP == true && $VERSION == true ]]; then
-    echo $parseError >&2
-
-    exit 1
-fi
-
 if [[ $HELP == true ]]; then
-    echo $about
     printf "%s\n" "$usage"
-
-    exit
-fi
-
-if [[ $VERSION == true ]]; then
-    echo $about
 
     exit
 fi
@@ -93,22 +70,8 @@ if ! [[ $SIZE =~ ^[0-9]+$ ]]; then
     exit 1
 fi
 
-if [[ $METHOD == "urandom" ]]; then
-    printf "Your new password: \n\n"
+printf "Your new password: \n\n"
 
-    # "tr" will limit what characters can be used, and "head" will limit the size
-    # of the resulting string.
-    strings /dev/urandom | tr -dc "[:alnum:][:punct:]" | head -c$SIZE; echo
-
-    exit
-elif [[ $METHOD == "gpg" ]]; then
-    printf "Your new password: \n\n"
-
-    gpg --gen-random --armor 2 $SIZE
-
-    exit
-else
-    echo $parseError >&2
-
-    exit 1
-fi
+# "tr" will limit what characters can be used, and "head" will limit the size
+# of the resulting string.
+strings /dev/urandom | tr -dc "[:alnum:][:punct:]" | head -c$SIZE; echo
