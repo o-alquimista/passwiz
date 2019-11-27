@@ -1,6 +1,9 @@
 # PassWiz
 A random password generator using /dev/urandom as its source.
 
+## Requirements
+- strings (package `binutils` on Debian)
+
 ## Usage
 ```
 Usage: passwiz [-h, --help] [-s SIZE, --size SIZE] [-c CONSTRAINT, --constraint CONSTRAINT]
