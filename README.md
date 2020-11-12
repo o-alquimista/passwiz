@@ -24,7 +24,7 @@ Character type constraints (--constraint argument):
 ```
 
 ## License
-Copyright 2019 Douglas Silva (0x9fd287d56ec107ac)
+Copyright 2019-2020 Douglas Silva (0x9fd287d56ec107ac)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
