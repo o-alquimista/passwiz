@@ -91,5 +91,6 @@ case $constraint in
     * ) echo $invalidConstraint >&2; exit 1 ;;
 esac
 
-printf "Your new password: \n\n"
-strings /dev/urandom | tr -dc $constraint | head -c$size; echo
+strings /dev/urandom | tr -dc $constraint | head -c $size | xclip -selection clipboard
+
+echo "Your new password has been copied to the clipboard!"

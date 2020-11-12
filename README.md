@@ -3,6 +3,7 @@ A random password generator using /dev/urandom as its source.
 
 ## Requirements
 - strings (package `binutils` on Debian)
+- xclip
 
 ## Usage
 ```
