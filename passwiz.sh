@@ -1,9 +1,9 @@
 #!/bin/bash
 
 #
-# PassWiz, a random password generator.
+# PassWiz, a random string generator.
 #
-# Copyright 2019-2020 Douglas Silva (0x9fd287d56ec107ac)
+# Copyright 2019-2021 Douglas Silva (0x9fd287d56ec107ac)
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,23 +19,23 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-parseError="Failed parsing options. See --help."
-
 opts=`getopt -n 'passwiz' -o c:s:h --long constraint:,size:,help -- "$@"`
 
-# If getopt exits with an error, echo a message.
-if [[ $? != 0 ]] ; then echo $parseError >&2 ; exit 1 ; fi
-
-# Set default settings.
-help=false
-size=20
-constraint=4
+if [[ $? != 0 ]]; then
+    echo "Failed parsing options. See --help." >&2;
+    exit 1;
+fi
 
 # Constraint options
-readonly digit=1
-readonly alpha=2
-readonly alnum=3
-readonly alnum_punct=4
+readonly CONSTRAINT_DIGIT=1
+readonly CONSTRAINT_ALPHA=2
+readonly CONSTRAINT_ALNUM=3
+readonly CONSTRAINT_ALNUM_PUNCT=4
+
+# Set default settings
+help=false
+size=20
+constraint=$CONSTRAINT_ALNUM_PUNCT
 
 # Retrieves the values passed with the arguments. It uses the count of
 # arguments passed as a progress indicator, "shifting" back until the
@@ -53,10 +53,10 @@ done
 usage=$(cat << EOF
 Usage: passwiz [-h, --help] [-s SIZE, --size SIZE] [-c CONSTRAINT, --constraint CONSTRAINT]
 
-PassWiz, a random password generator.
+PassWiz, a random string generator.
 
 Options:
-  -c, --constraint   Determine what type of characters can be used to make the password
+  -c, --constraint   Determines what type of characters can be used to make the string
   -s, --size         Select the size of the generated string (default: 20)
   -h, --help         Print this help, then exit
 
@@ -68,29 +68,27 @@ Character type constraints (--constraint argument):
 EOF
 )
 
-invalidConstraint="Invalid constraint. See --help."
-invalidSize="Invalid size. See --help."
-
 if [[ $help == true ]]; then
     printf "%s\n" "$usage"
-
     exit
 fi
 
 if ! [[ $size =~ ^[0-9]+$ ]]; then
-    echo $invalidSize >&2
-
+    echo "Invalid size. See --help." >&2
     exit 1
 fi
 
 case $constraint in
-    $digit ) constraint="[:digit:]";;
-    $alpha ) constraint="[:alpha:]";;
-    $alnum ) constraint="[:alnum:]";;
-    $alnum_punct ) constraint="[:alnum:][:punct:]";;
-    * ) echo $invalidConstraint >&2; exit 1 ;;
+    $CONSTRAINT_DIGIT ) constraint="[:digit:]";;
+    $CONSTRAINT_ALPHA ) constraint="[:alpha:]";;
+    $CONSTRAINT_ALNUM ) constraint="[:alnum:]";;
+    $CONSTRAINT_ALNUM_PUNCT ) constraint="[:alnum:][:punct:]";;
+    * ) echo "Invalid constraint. See --help." >&2; exit 1 ;;
 esac
 
-strings /dev/urandom | tr -dc $constraint | head -c $size | xclip -selection clipboard
+# This is where the string is retrieved, using the same method
+# password-store v1.7.4 uses (read from process substitution)
+read -r -n $size string < <(LC_ALL=C tr -dc "$constraint" < /dev/urandom)
 
-echo "Your new password has been copied to the clipboard!"
+echo "$string"
+
