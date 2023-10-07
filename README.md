@@ -10,12 +10,20 @@ A random string generator and a passphrase (diceware) generator.
 - C compiler (e.g. GNU C Compiler)
 - libsodium headers (`libsodium-dev` on Debian)
 
-## Installation and usage
+## Installation
 ```sh
 make
 
-# then as root - to install in /usr/local
+# then as root, to install in /usr/local
 make install
+```
+
+## Usage
+```sh
+passwiz --help
+
+# Generate a 6-word passphrase
+passphrase
 ```
 
 ## License

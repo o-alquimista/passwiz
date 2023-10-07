@@ -30,7 +30,7 @@ if [[ $? -ne 0 ]]; then
     exit 1;
 fi
 
-readonly VERSION_TAG="v2.1.0"
+readonly VERSION_TAG="v3.0.0"
 
 # Constraint options
 readonly CONSTRAINT_DIGIT=1
