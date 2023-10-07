@@ -1,16 +1,21 @@
 # PassWiz
-A random string generator.
-
-It reads from `/dev/urandom`.
+A random string generator and a passphrase (diceware) generator.
 
 ## Requirements
+- GNU/Linux
 - Bash shell
 
-## Usage
+### Build requirements
+- GNU make
+- C compiler (e.g. GNU C Compiler)
+- libsodium headers (`libsodium-dev` on Debian)
+
+## Installation and usage
 ```sh
-$ mv ./passwiz.sh ~/bin/passwiz
-$ chmod +x ~/bin/passwiz
-$ passwiz --help
+make
+
+# then as root - to install in /usr/local
+make install
 ```
 
 ## License
