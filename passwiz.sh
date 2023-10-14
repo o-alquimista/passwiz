@@ -67,7 +67,7 @@ Options:
   -c, --constraint   Determines what type of characters can be used to make the string
   -s, --size         Select the size of the generated string (default: 20)
   -h, --help         Print this help, then exit
-  -h, --version      Print the version tag, then exit
+  -v, --version      Print the version tag, then exit
 
 Character type constraints (--constraint argument):
   [1] Numeric
