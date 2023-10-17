@@ -74,7 +74,7 @@ Character type constraints (--constraint argument):
   [2] Alphabetical
   [3] Alphanumerical
   [4] Alphanumerical and punctuation (default)
-  [5] Other - specify which characters are allowed; see "man tr" for format)
+  [X] Other - specify which characters are allowed; see "man tr" for format)
 EOF
 )
 
