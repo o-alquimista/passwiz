@@ -35,7 +35,7 @@ install: passwiz passphrase
 uninstall:
 	rm --verbose --recursive --force \
 		$(DESTDIR)$(sysconfdir)/passwiz \
-		$(DESTDIR)$(bindir)/passwiz
+		$(DESTDIR)$(bindir)/passwiz \
 		$(DESTDIR)$(bindir)/passphrase
 
 clean:
