@@ -19,16 +19,19 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-opts=$(getopt \
+args=$(getopt \
   --name 'passwiz' \
   --options c:s:hv \
   --longoptions constraint:,size:,help,version \
   -- "$@")
 
-if [[ $? -ne 0 ]]; then
+if [ $? -ne 0 ]; then
     echo "Failed parsing options. See --help." >&2;
     exit 1;
 fi
+
+eval set -- "$args"
+unset args
 
 readonly VERSION_TAG="v3.0.0"
 
@@ -47,14 +50,31 @@ constraint=$CONSTRAINT_ALNUM_PUNCT
 # Retrieves the values passed with the arguments. It uses the count of
 # arguments passed as a progress indicator, "shifting" back until the
 # count reaches zero, which causes the loop to end.
-while (( $# )); do
+while true; do
   case "$1" in
-    -c | --constraint ) constraint="$2"; shift 2 ;;
-    -s | --size ) size="$2"; shift 2 ;;
-    -h | --help ) help=true; shift ;;
-    -v | --version ) version=true; shift ;;
-    -- ) shift; break ;;
-    * ) break ;;
+    '-c'|'--constraint')
+      constraint="$2"
+      shift 2
+    ;;
+    '-s'|'--size')
+      size="$2"
+      shift 2
+    ;;
+    '-h'|'--help')
+      help=true
+      shift
+    ;;
+    '-v'|'--version')
+      version=true
+      shift
+    ;;
+    '--')
+      shift
+      break
+    ;;
+    *)
+      break
+    ;;
   esac
 done
 
@@ -95,11 +115,11 @@ fi
 
 # see: man tr
 case $constraint in
-    $CONSTRAINT_DIGIT ) constraint="[:digit:]";;
-    $CONSTRAINT_ALPHA ) constraint="[:alpha:]";;
-    $CONSTRAINT_ALNUM ) constraint="[:alnum:]";;
-    $CONSTRAINT_ALNUM_PUNCT ) constraint="[:alnum:][:punct:]";;
-    * ) constraint="$constraint";;
+    $CONSTRAINT_DIGIT) constraint="[:digit:]";;
+    $CONSTRAINT_ALPHA) constraint="[:alpha:]";;
+    $CONSTRAINT_ALNUM) constraint="[:alnum:]";;
+    $CONSTRAINT_ALNUM_PUNCT) constraint="[:alnum:][:punct:]";;
+    *) constraint="$constraint";;
 esac
 
 # This is where the string is retrieved, using the same method
