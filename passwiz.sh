@@ -98,23 +98,18 @@ Character type constraints (--constraint argument):
 EOF
 )
 
-if [[ $help == true ]]; then
+if [ $help == true ]; then
     printf "%s\n" "$usage"
     exit
 fi
 
-if [[ $version == true ]]; then
+if [ $version == true ]; then
     echo $VERSION_TAG
     exit
 fi
 
-if ! [[ $size =~ ^[0-9]+$ ]]; then
-    echo "Invalid size. See --help." >&2
-    exit 1
-fi
-
 # see: man tr
-case $constraint in
+case "$constraint" in
     $CONSTRAINT_DIGIT) constraint="[:digit:]";;
     $CONSTRAINT_ALPHA) constraint="[:alpha:]";;
     $CONSTRAINT_ALNUM) constraint="[:alnum:]";;
@@ -124,6 +119,6 @@ esac
 
 # This is where the string is retrieved, using the same method
 # password-store v1.7.4 uses (read from process substitution)
-read -r -n $size string < <(LC_ALL=C tr -dc "$constraint" < /dev/urandom)
+read -r -n "$size" string < <(LC_ALL=C tr -dc "$constraint" < /dev/urandom)
 
 echo "$string"
